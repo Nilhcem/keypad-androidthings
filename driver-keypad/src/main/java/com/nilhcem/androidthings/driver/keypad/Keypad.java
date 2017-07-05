@@ -74,7 +74,7 @@ public class Keypad implements AutoCloseable {
 
         for (int i = 0; i < mColGpios.length; i++) {
             mColGpios[i].close();
-            mRowGpios[i] = null;
+            mColGpios[i] = null;
         }
     }
 

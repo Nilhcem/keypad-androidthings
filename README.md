@@ -1,7 +1,5 @@
 # Matrix Keypad driver for Android Things
 
-![photo][]
-
 ## Download
 
 ```groovy
@@ -17,7 +15,7 @@ String[] rowPins = new String[]{"BCM12", "BCM16", "BCM20", "BCM21"};
 String[] colPins = new String[]{"BCM25", "BCM24", "BCM23", "BCM27"};
  
 Keypad keypad = new Keypad(ROW_PINS, COL_PINS, Keypad.KEYS_4x4);
-// For a 3x4 matrix, You can use the "Keypad.KEYS_3x4" constant. You can also set your own custom keys.
+// For a 3x4 matrix, you can use the "Keypad.KEYS_3x4" constant. You can also set your own custom keys.
  
 keypad.register(new Keypad.OnKeyEventListener() {
     @Override
@@ -32,15 +30,50 @@ keypad.unregister();
 keypad.close();
 ```
 
+Alternatively, you can register a `KeypadInputDriver` with the system and receive `KeyEvents` through the standard Android APIs:
+
+```java
+KeypadInputDriver mInputDriver;
+
+try {
+    mInputDriver = new KeypadInputDriver(ROW_PINS, COL_PINS, Keypad.KEYS_4x4);
+    mInputDriver.register();
+} catch (IOException e) {
+    // error configuring keypad...
+}
+
+// Override key event callbacks in your Activity:
+
+@Override
+public boolean onKeyDown(int keyCode, KeyEvent event) {
+    Log.i(TAG, "onKeyDown: " + event.getDisplayLabel());
+    return true;
+}
+
+@Override
+public boolean onKeyUp(int keyCode, KeyEvent event) {
+    Log.i(TAG, "onKeyUp: " + event.getDisplayLabel());
+    return true;
+}
+
+// Unregister and close the input driver when finished:
+
+mInputDriver.unregister();
+try {
+    mInputDriver.close();
+} catch (IOException e) {
+    // error closing input driver
+}
+```
 
 ### Schematic
 
 The sample is for a 4x4 Membrane Matrix Keypad, but the library should work for any keypad formats (e.g. 3x4).  
 We use 1k pull-up resistors for the rows
 
-![rowscols][]
-
 ![schematic][]
+
+![rowscols][]
 
 * Row 1 -> BCM12
 * Row 2 -> BCM16
@@ -53,8 +86,8 @@ We use 1k pull-up resistors for the rows
 
 ## Kudos to
 
-[Polidea][polidea] for the Polithings numpad driver.
-[ciromattia][ciromattia] for the Fritzing 4x4 membrane matrix keypad.
+* [Polidea][polidea] for the Polithings numpad12 driver.
+* [ciromattia][ciromattia] for the Fritzing 4x4 membrane matrix keypad.
 
 [rowscols]: https://raw.githubusercontent.com/Nilhcem/keypad-androidthings/master/assets/rowscols.png
 [schematic]: https://raw.githubusercontent.com/Nilhcem/keypad-androidthings/master/assets/schematic.png
