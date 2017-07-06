@@ -14,7 +14,7 @@ dependencies {
 String[] rowPins = new String[]{"BCM12", "BCM16", "BCM20", "BCM21"};
 String[] colPins = new String[]{"BCM25", "BCM24", "BCM23", "BCM27"};
  
-Keypad keypad = new Keypad(ROW_PINS, COL_PINS, Keypad.KEYS_4x4);
+Keypad keypad = new Keypad(rowPins, colPins, Keypad.KEYS_4x4);
 // For a 3x4 matrix, you can use the "Keypad.KEYS_3x4" constant. You can also set your own custom keys.
  
 keypad.register(new Keypad.OnKeyEventListener() {
@@ -36,7 +36,7 @@ Alternatively, you can register a `KeypadInputDriver` with the system and receiv
 KeypadInputDriver mInputDriver;
 
 try {
-    mInputDriver = new KeypadInputDriver(ROW_PINS, COL_PINS, Keypad.KEYS_4x4);
+    mInputDriver = new KeypadInputDriver(rowPins, colPins, Keypad.KEYS_4x4);
     mInputDriver.register();
 } catch (IOException e) {
     // error configuring keypad...
