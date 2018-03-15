@@ -66,6 +66,12 @@ try {
 }
 ```
 
+Also, don't forget to add the required permission to your app's manifest file:
+
+```xml
+<uses-permission android:name="com.google.android.things.permission.MANAGE_INPUT_DRIVERS" />
+```
+
 ### Schematic
 
 The sample is for a 4x4 Membrane Matrix Keypad, but the library should work for any keypad formats (e.g. 3x4).  

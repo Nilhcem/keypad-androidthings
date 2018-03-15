@@ -3,8 +3,8 @@ package com.nilhcem.androidthings.driver.keypad;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 
-import com.google.android.things.userdriver.InputDriver;
 import com.google.android.things.userdriver.UserDriverManager;
+import com.google.android.things.userdriver.input.InputDriver;
 
 import java.io.IOException;
 
@@ -37,7 +37,7 @@ public class KeypadInputDriver implements AutoCloseable {
         }
         if (mDriver == null) {
             mDriver = build(mDevice, mKeys);
-            UserDriverManager.getManager().registerInputDriver(mDriver);
+            UserDriverManager.getInstance().registerInputDriver(mDriver);
         }
     }
 
@@ -50,7 +50,7 @@ public class KeypadInputDriver implements AutoCloseable {
         }
 
         if (mDriver != null) {
-            UserDriverManager.getManager().unregisterInputDriver(mDriver);
+            UserDriverManager.getInstance().unregisterInputDriver(mDriver);
             mDriver = null;
         }
 

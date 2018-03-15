@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.google.android.things.pio.Gpio;
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,18 +46,18 @@ public class Keypad implements AutoCloseable {
     private AtomicBoolean mIsActive = new AtomicBoolean(false);
 
     public Keypad(String[] rowPins, String[] colPins, int[][] keys) throws IOException {
-        PeripheralManagerService pioService = new PeripheralManagerService();
+        PeripheralManager manager = PeripheralManager.getInstance();
         mRowGpios = new Gpio[rowPins.length];
         mColGpios = new Gpio[rowPins.length];
 
         for (int i = 0; i < rowPins.length; i++) {
-            mRowGpios[i] = pioService.openGpio(rowPins[i]);
+            mRowGpios[i] = manager.openGpio(rowPins[i]);
             mRowGpios[i].setDirection(Gpio.DIRECTION_IN);
             mRowGpios[i].setEdgeTriggerType(Gpio.EDGE_BOTH);
             mRowGpios[i].setActiveType(Gpio.ACTIVE_LOW);
         }
         for (int i = 0; i < colPins.length; i++) {
-            mColGpios[i] = pioService.openGpio(colPins[i]);
+            mColGpios[i] = manager.openGpio(colPins[i]);
             mColGpios[i].setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
             mColGpios[i].setValue(true);
         }
