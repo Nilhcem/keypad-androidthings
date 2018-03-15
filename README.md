@@ -4,7 +4,7 @@
 
 ```groovy
 dependencies {
-    compile 'com.nilhcem.androidthings:driver-keypad:0.0.1'
+    compile 'com.nilhcem.androidthings:driver-keypad:0.0.2'
 }
 ```
 

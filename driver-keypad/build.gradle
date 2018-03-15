@@ -28,7 +28,7 @@ publish {
     userOrg = 'nilhcem'
     groupId = 'com.nilhcem.androidthings'
     artifactId = 'driver-keypad'
-    publishVersion = '0.0.1'
+    publishVersion = '0.0.2'
     desc = 'Android Things driver for matrix keypads.'
     website = 'https://github.com/Nilhcem/keypad-androidthings'
 }
