@@ -1,20 +1,29 @@
 package com.nilhcem.androidthings.driver.keypad;
 
-import android.view.InputDevice;
 import android.view.KeyEvent;
 
 import com.google.android.things.userdriver.UserDriverManager;
 import com.google.android.things.userdriver.input.InputDriver;
+import com.google.android.things.userdriver.input.InputDriverEvent;
 
 import java.io.IOException;
 
 public class KeypadInputDriver implements AutoCloseable {
     private static final String DRIVER_NAME = "Keypad";
-    private static final int DRIVER_VERSION = 1;
 
     private Keypad mDevice;
-    private InputDriver mDriver;
+    private InputDriver mInputDriver;
+    private final InputDriverEvent mInputEvent = new InputDriverEvent();
     private int[] mKeys;
+
+    private Keypad.OnKeyEventListener mKeyEventListener = new Keypad.OnKeyEventListener() {
+        @Override
+        public void onKeyEvent(KeyEvent keyEvent) {
+            mInputEvent.clear();
+            mInputEvent.setKeyPressed(keyEvent.getKeyCode(), keyEvent.getAction() == KeyEvent.ACTION_DOWN);
+            mInputDriver.emit(mInputEvent);
+        }
+    };
 
     public KeypadInputDriver(String[] rowPins, String[] colPins, int[][] keys) throws IOException {
         mDevice = new Keypad(rowPins, colPins, keys);
@@ -35,9 +44,15 @@ public class KeypadInputDriver implements AutoCloseable {
         if (mDevice == null) {
             throw new IllegalStateException("cannot registered closed driver");
         }
-        if (mDriver == null) {
-            mDriver = build(mDevice, mKeys);
-            UserDriverManager.getInstance().registerInputDriver(mDriver);
+        if (mInputDriver == null) {
+            mInputDriver = new InputDriver.Builder()
+                    .setName(DRIVER_NAME)
+                    .setSupportedKeys(mKeys)
+                    .build();
+
+            mDevice.register(mKeyEventListener);
+
+            UserDriverManager.getInstance().registerInputDriver(mInputDriver);
         }
     }
 
@@ -49,27 +64,12 @@ public class KeypadInputDriver implements AutoCloseable {
             throw new IllegalStateException("cannot unregistered closed driver");
         }
 
-        if (mDriver != null) {
-            UserDriverManager.getInstance().unregisterInputDriver(mDriver);
-            mDriver = null;
+        if (mInputDriver != null) {
+            UserDriverManager.getInstance().unregisterInputDriver(mInputDriver);
+            mInputDriver = null;
         }
 
         mDevice.unregister();
-    }
-
-    static InputDriver build(Keypad keypad, int[] keys) {
-        final InputDriver inputDriver = new InputDriver.Builder(InputDevice.SOURCE_CLASS_BUTTON)
-                .setName(DRIVER_NAME)
-                .setVersion(DRIVER_VERSION)
-                .setKeys(keys)
-                .build();
-        keypad.register(new Keypad.OnKeyEventListener() {
-            @Override
-            public void onKeyEvent(KeyEvent keyEvent) {
-                inputDriver.emit(new KeyEvent[]{keyEvent});
-            }
-        });
-        return inputDriver;
     }
 
     private int[] flattenArray(int[][] array) {
