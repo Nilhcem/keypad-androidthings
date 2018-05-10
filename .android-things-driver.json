@@ -1,0 +1,19 @@
+{
+  "title": "Matrix Keypad",
+  "category": "Matrix Keypad",
+  "samples": [
+    "https://github.com/Nilhcem/keypad-androidthings/tree/master/sample"
+  ],
+  "published-maven": {
+    "maven-url": "https://jcenter.bintray.com",
+    "groupid": "com.nilhcem.androidthings",
+    "artifactid": "driver-keypad"
+  },
+  "compatible-with": [
+    {
+      "title": "Matrix Keypad",
+      "photo": "https://cdn-shop.adafruit.com/970x728/419-05.jpg",
+      "url": "https://www.adafruit.com/product/419"
+    }
+  ]
+}
